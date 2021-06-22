@@ -8,8 +8,11 @@
 #Copy files from WeDo share to Exported-Files folder
 Robocopy "<PATH TO COPY FILES FROM>"*.csv "<PATH TO DOWNLOAD FILES TO>"  /r:1 /w:2 /log:"<PATH TO LOG>"
 
-#Adds _utf8 before extension to all files before zip
-Get-ChildItem "<PATH TO COPIED FILES>"\*.* | ForEach-Object { Rename-Item –path $_.Fullname –Newname ( $_.basename + ('_utf8') + $_.extension) }
+#Changes encoding to UTF8 and renames files
+$Files = Get-ChildItem "<PATH TO FILES>"\*.csv
+ForEach ($File in $Files) {
+  Get-Content $File.FullName | Set-Content -Encoding utf8 "<PATH TO EXPORTED FILES>$($File.Basename + ("_utf8") + $File.Extension)"
+}
 
 #Zips files with password
 <PATH TO 7ZIP ALONE>\7za.exe a -t7z -mx6 -p"<PASSWORD>" "<PATH TO ZIPPED FILES>"\PSF.7z "<PATH TO FILES TO BE ZIPPED>"
