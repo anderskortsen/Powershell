@@ -6,23 +6,24 @@
 
 
 #Copy files from WeDo share to Exported-Files folder
-Robocopy \\192.168.0.9\u\export\upload_til_apps\ *.csv C:\netIP\Exported-Files  /r:1 /w:2 /log:C:\netIP\ExportStatus\ExportlogRobocopy.txt
+Robocopy "<PATH TO COPY FILES FROM>"*.csv "<PATH TO DOWNLOAD FILES TO>"  /r:1 /w:2 /log:"<PATH TO LOG>"
 
 #Changes encoding to UTF8 and renames files
-$Files = Get-ChildItem C:\netIP\Exported-Files\*.csv
+$Files = Get-ChildItem "<PATH TO FILES>"\*.csv
 ForEach ($File in $Files) {
-  Get-Content $File.FullName | Set-Content -Encoding utf8 "C:\netIP\Exported-Files\$($File.Basename + ("_utf8") + $File.Extension)"
+  Get-Content $File.FullName | Set-Content -Encoding utf8 "<PATH TO EXPORTED FILES>$($File.Basename + ("_utf8") + $File.Extension)"
 }
 
 #Zips files with password
-C:\netIP\7zip-alone\7za.exe a -t7z -mx6 -p4LTeaDprdYYf C:\netIP\Exported-Files\PSF.7z C:\netIP\Exported-Files\*_utf8.csv
+<PATH TO 7ZIP ALONE>\7za.exe a -t7z -mx6 -p"<PASSWORD>" "<PATH TO ZIPPED FILES>"\PSF.7z "<PATH TO FILES TO BE ZIPPED>"
+
 
 # Connects to FTP server and uploads .7z file to dest folder
 & "C:\Program Files (x86)\WinSCP\WinSCP.com" `
-  /log="C:\netIP\WinSCP.log" /ini=nul `
+  /log="<PATH TO LOG>" /ini=nul `
   /command `
-    "open ftps://PolitietsSprogforbun:Psf6ewkdj3gksnhf@medlemsinfo.politiets-sprogforbund.dk/" `
-    "put -latest C:\netIP\Exported-Files\PSF.7z" `
+    "open ftps://<USERNAME>:<PASSWORD>@<SERVERNAME>/" `
+    "put -latest <PATH TO ZIPPED FILE>\PSF.7z" `
     "exit"
 
 $winscpResult = $LastExitCode
