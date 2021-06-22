@@ -1,6 +1,6 @@
 ######################################################
 # Anders Høgedal Kortsen, netIP a/s
-# 16/06/2021
+# 22/06/2021
 # Connects to SFTP, uploads files, moves uploaded files, closes session
 ######################################################
 
